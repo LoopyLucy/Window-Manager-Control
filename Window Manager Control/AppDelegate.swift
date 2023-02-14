@@ -12,6 +12,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var window: NSWindow!
     private var statusItem: NSStatusItem!
     
+    private var tiled: Bool!
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         /*window = NSWindow(
             contentRect: NSRect( x: 0, y: 0, width: 480, height: 270),
@@ -25,11 +27,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
-        if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "1.circle", accessibilityDescription: "1")
-        }
+        setIcon("Tiled")
         
         setupMenus()
+    }
+    
+    func setIcon(_ name: String) {
+        let image = NSImage(named: name)
+        image?.size = NSSize(width: 16, height: 16)
+        
+        if let button = statusItem.button {
+            button.image = image
+        }
     }
     
     func setupMenus() {
@@ -80,11 +89,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc func bStop() {
-        do { try safeShell("brew services stop yabai") } catch { print("\(error)") }
+        do { try safeShell("brew services stop yabai"); setIcon("Loose") } catch { print("\(error)") }
     }
     
     @objc func bStart() {
-        do { try safeShell("brew services start yabai") } catch { print("\(error)") }
+        do { try safeShell("brew services start yabai"); setIcon("Tiled") } catch { print("\(error)") }
     }
     
     @objc func bOpen() {
